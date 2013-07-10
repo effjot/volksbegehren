@@ -11,8 +11,9 @@ load("DEU_adm3.RData")
 ## Brandenburgische Landkreise ausschneiden
 karte <- gadm[gadm$NAME_1 == "Brandenburg", ]
 
-## Namen bereinigen (kreisfr. Städte)
+## Namen bereinigen (kreisfr. Städte; Frankfurt)
 karte$NAME_3 <- gsub(" Städte", "", karte$NAME_3)
+karte$NAME_3 <- gsub("am Oder", "(Oder)", karte$NAME_3)
 
 
 ### VB-Ergebnisse mit Karte verbinden
