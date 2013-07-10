@@ -34,17 +34,41 @@ correct.ordering <- match(karte@data$NAME_3, merged$NAME_3)
 karte@data <- merged[correct.ordering, ]
 
 
-### Darstellung
+### Kartenerstellung
 
 ## Klasseneinteilung
 
 anzahl.klassen <- c(0, 50, 100, 200, 500, 1000, 2000, 5000, 10000)
+prozent.klassen <- c(0, 0.05, 0.1, 0.2, 0.5, 1, 2, 5, 10)
 
-#anz.klassif <- as.factor(as.numeric(cut(karte$Anzahl, anzahl.klassen)))
-#levels(anz.klassif) <- paste("bis", anzahl.klassen)
 karte$anz.klassif <- cut(karte$Anzahl, anzahl.klassen,
                           labels = paste("bis", tail(anzahl.klassen, -1)))
+karte$proz.klassif <- cut(karte$Prozent, prozent.klassen,
+                          labels = paste0("bis ", tail(prozent.klassen, -1), "%"))
 
-palette <- brewer.pal(8, "GnBu")
+## Darstellung
 
-spplot(karte, "anz.klassif", col.regions = palette, col = grey(0.75), main = "Zwischenstand 10.07.13: Anzahl Unterschriften")
+anz.palette <- brewer.pal(nlevels(karte$anz.klassif), "GnBu")
+proz.palette <- brewer.pal(nlevels(karte$proz.klassif), "GnBu")
+
+karte.ohne.spn <- karte[karte$NAME_3 != "Spree-Neiße", ]
+karte.nur.spn <- karte[karte$NAME_3 == "Spree-Neiße", ]
+coord.ohne.spn <- coordinates(karte.ohne.spn)
+coord.nur.spn <- coordinates(karte.nur.spn)
+coord.nur.spn[2] <- coord.nur.spn[2] - 0.12
+
+png("zwischenstand-anz.png", width=480, height=480)
+spplot(karte, "anz.klassif", col.regions = anz.palette, col = grey(0.75),
+       main = "Zwischenstand 10.07.13: Anzahl Eintragungen",
+       sp.layout = list(
+         list("sp.text", coord.nur.spn, karte.nur.spn$Anzahl),
+         list("sp.text", coord.ohne.spn, karte.ohne.spn$Anzahl)))
+dev.off()
+
+png("zwischenstand-proz.png", width=480, height=480)
+spplot(karte, "proz.klassif", col.regions = proz.palette, col = grey(0.75),
+       main = "Zwischenstand 10.07.13: Abstimmungsbeteiligung in Prozent",
+       sp.layout = list(
+         list("sp.text", coord.nur.spn, karte.nur.spn$Prozent),
+         list("sp.text", coord.ohne.spn, karte.ohne.spn$Prozent)))
+dev.off()
