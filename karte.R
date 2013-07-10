@@ -3,7 +3,10 @@ library(RColorBrewer)
 
 
 ### Zwischenstand Landeswahlleiter 10.07.13 laden
-eintr <- read.csv("zwischenstand.csv", as.is = TRUE)
+eintr <- read.csv("zwischenstand.csv", as.is = TRUE, fileEncoding = "latin1")
+
+gemeinden <- read.csv("zwischenstand-gemeinden.csv", as.is = TRUE, fileEncoding = "latin1")
+coordinates(gemeinden) <- ~ lon + lat   # Koordinatenspalten zuweisen
 
 
 ### Landkreise in Deutschland von http://gadm.org/
@@ -56,6 +59,8 @@ karte.nur.spn <- karte[karte$NAME_3 == "Spree-Neiße", ]
 coord.ohne.spn <- coordinates(karte.ohne.spn)
 coord.nur.spn <- coordinates(karte.nur.spn)
 coord.nur.spn[2] <- coord.nur.spn[2] - 0.12
+gemnd.ohne.cb <- gemeinden[gemeinden$Gemeinde != "Cottbus", ]
+gemnd.nur.cb <- gemeinden[gemeinden$Gemeinde == "Cottbus", ]
 
 png("zwischenstand-anz.png", width=480, height=480)
 spplot(karte, "anz.klassif", col.regions = anz.palette, col = grey(0.75),
@@ -71,4 +76,13 @@ spplot(karte, "proz.klassif", col.regions = proz.palette, col = grey(0.75),
        sp.layout = list(
          list("sp.text", coord.nur.spn, karte.nur.spn$Prozent),
          list("sp.text", coord.ohne.spn, karte.ohne.spn$Prozent)))
+dev.off()
+
+png("zwischenstand-top5.png", width=480, height=480)
+spplot(karte, "anz.klassif", col.regions = anz.palette, col = grey(0.75),
+       main = "Zwischenstand 10.07.13: Top-5-Gemeinden",
+       sp.layout = list(
+         list("sp.points", gemeinden, pch = 16, col = "red", cex = 1.5),
+         list("sp.text", coordinates(gemnd.ohne.cb), gemnd.ohne.cb$Anzahl, adj = c(1.2, 1.2), cex = 1.5),
+         list("sp.text", coordinates(gemnd.nur.cb), gemnd.nur.cb$Anzahl, pos = 4, cex = 1.5)))
 dev.off()
