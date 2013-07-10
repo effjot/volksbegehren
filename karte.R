@@ -1,4 +1,5 @@
 library(sp)
+library(RColorBrewer)
 
 
 ### Zwischenstand Landeswahlleiter 10.07.13 laden
@@ -31,3 +32,19 @@ correct.ordering <- match(karte@data$NAME_3, merged$NAME_3)
 
 # overwrite the original dataframe with the new merged dataframe, in the correct order
 karte@data <- merged[correct.ordering, ]
+
+
+### Darstellung
+
+## Klasseneinteilung
+
+anzahl.klassen <- c(0, 50, 100, 200, 500, 1000, 2000, 5000, 10000)
+
+#anz.klassif <- as.factor(as.numeric(cut(karte$Anzahl, anzahl.klassen)))
+#levels(anz.klassif) <- paste("bis", anzahl.klassen)
+karte$anz.klassif <- cut(karte$Anzahl, anzahl.klassen,
+                          labels = paste("bis", tail(anzahl.klassen, -1)))
+
+palette <- brewer.pal(8, "GnBu")
+
+spplot(karte, "anz.klassif", col.regions = palette, col = grey(0.75), main = "Zwischenstand 10.07.13: Anzahl Unterschriften")
