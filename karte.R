@@ -13,28 +13,20 @@ coordinates(gemeinden) <- ~ lon + lat   # Koordinatenspalten zuweisen
 load("DEU_adm3.RData")
 
 ## Brandenburgische Landkreise ausschneiden
-karte <- gadm[gadm$NAME_1 == "Brandenburg", ]
+brandenburg <- gadm[gadm$NAME_1 == "Brandenburg", ]
+colnames(brandenburg@data)[colnames(brandenburg@data) == "NAME_3"] <- "Landkreis"
 
 ## Namen bereinigen (kreisfr. Städte; Frankfurt)
-karte$NAME_3 <- gsub(" Städte", "", karte$NAME_3)
-karte$NAME_3 <- gsub("am Oder", "(Oder)", karte$NAME_3)
+brandenburg$Landkreis <- gsub(" Städte", "", brandenburg$Landkreis)
+brandenburg$Landkreis <- gsub("am Oder", "(Oder)", brandenburg$Landkreis)
 
 
 ### VB-Ergebnisse mit Karte verbinden
-### (übernommen von http://casoilresource.lawr.ucdavis.edu/drupal/book/export/html/664)
 
-# 'join' the new data with merge()
-# all.x=TRUE is used to ensure we have the same number of rows after the join
-# in case that the new table has fewer
-merged <- merge(x = karte@data, y = eintr,
-                by.x = "NAME_3", by.y = "Landkreis",
-                all.x = TRUE)
-
-# generate a vector that represents the original ordering of rows in the sp object
-correct.ordering <- match(karte@data$NAME_3, merged$NAME_3)
-
-# overwrite the original dataframe with the new merged dataframe, in the correct order
-karte@data <- merged[correct.ordering, ]
+karte <- brandenburg
+karte@data <- data.frame(brandenburg@data,
+                         eintr[match(brandenburg@data[, "Landkreis"],
+                                     eintr[, "Landkreis"]), ])
 
 
 ### Kartenerstellung
@@ -54,8 +46,8 @@ karte$proz.klassif <- cut(karte$Prozent, prozent.klassen,
 anz.palette <- brewer.pal(nlevels(karte$anz.klassif), "GnBu")
 proz.palette <- brewer.pal(nlevels(karte$proz.klassif), "GnBu")
 
-karte.ohne.spn <- karte[karte$NAME_3 != "Spree-Neiße", ]
-karte.nur.spn <- karte[karte$NAME_3 == "Spree-Neiße", ]
+karte.ohne.spn <- karte[karte$Landkreis != "Spree-Neiße", ]
+karte.nur.spn <- karte[karte$Landkreis == "Spree-Neiße", ]
 coord.ohne.spn <- coordinates(karte.ohne.spn)
 coord.nur.spn <- coordinates(karte.nur.spn)
 coord.nur.spn[2] <- coord.nur.spn[2] - 0.12
@@ -92,7 +84,7 @@ dev.off()
 
 ## Entfernungen (km) von Cottbus berechnen
 
-coord.cb <- coordinates(karte[karte$NAME_3 == "Cottbus", ])
+coord.cb <- coordinates(karte[karte$Landkreis == "Cottbus", ])
 
 dists <- spDistsN1(coordinates(karte), coord.cb, longlat = TRUE)
 entf <- data.frame(d = dists, proz = karte$Prozent,
