@@ -86,3 +86,35 @@ spplot(karte, "anz.klassif", col.regions = anz.palette, col = grey(0.75),
          list("sp.text", coordinates(gemnd.ohne.cb), gemnd.ohne.cb$Anzahl, adj = c(1.2, 1.2), cex = 1.5),
          list("sp.text", coordinates(gemnd.nur.cb), gemnd.nur.cb$Anzahl, pos = 4, cex = 1.5)))
 dev.off()
+
+
+### Entfernungsabhängigkeit
+
+## Entfernungen (km) von Cottbus berechnen
+
+coord.cb <- coordinates(karte[karte$NAME_3 == "Cottbus", ])
+
+dists <- spDistsN1(coordinates(karte), coord.cb, longlat = TRUE)
+entf <- data.frame(d = dists, proz = karte$Prozent,
+                   d.klassif = cut(dists,
+                     c(0,50, 100, 150, 250), include.lowest = TRUE))
+rm(dists)
+
+## Plots
+
+# Prozent vs. Entferung, y logarithmisch
+plot(entf$d, entf$proz, log = "y")
+
+# Prozent vs. Entferung, Ausschnitt
+plot(entf$d, entf$proz, ylim = c(0, 1))
+
+# Prozent vs. Entferung, Ausschnitt, x logarithmisch
+plot(entf$d, entf$proz, ylim = c(0, 1), log = "x")
+
+# Boxplot, y logarithmisch
+plot(entf$d.klass, entf$proz, log = "y",
+     xlab = "Entfernung von Cottbus (km)",
+     ylab = "Prozentuale Beteiligung, logarithm.",
+     boxwex = 0.25, col= "cornsilk")
+points(1:4, aggregate(entf$proz, list(entf$d.klass), FUN = mean)$x)
+text(1:4, c(0.2, 0.07, 0.3, 0.12), paste("N =", aggregate(entf$proz,by= list(entf$d.klassif), FUN = length)$x))
