@@ -6,6 +6,39 @@ library(RColorBrewer)
 
 ### Karten zeichnen
 
+vb.plot.map <- function(map, data, zcol = "Anzahl", title = "Volksbegehren: Anzahl Eintragungen",
+                        classes = round(seq(min(data[[zcol]]), max(data[[zcol]]),
+                          length.out = 10)),
+                        join.col = "Landkreis", offset.label = "Spree-Neiße",
+                        palette.name = "GnBu", palette.rev = FALSE) {
+
+  ##  VB-Ergebnisse mit Karte verbinden
+  map@data <- data.frame(map@data,
+                         data[match(map@data[, join.col],
+                                    data[, join.col]), ])
+
+  ## Klassen / Farbpalette
+  map$zclassif <- cut(map[[zcol]], classes,
+                        labels = paste("bis", tail(classes, -1)))
+  palette <- brewer.pal(nlevels(map$zclassif), palette.name)
+  if (palette.rev) palette <- rev(palette)
+
+  ## Labels versetzen wg. Überlappung
+  map.without.offset <- map[map[[join.col]] != offset.label, ]
+  map.with.offset <- map[map[[join.col]] == offset.label, ]
+  coord.without.offset <- coordinates(map.without.offset)
+  coord.with.offset <- coordinates(map.with.offset)
+  coord.with.offset[2] <- coord.with.offset[2] - 0.12
+
+  ## Plot erzeugen
+  spplot(map, "zclassif", col.regions = palette, col = grey(0.75),
+         main = paste0(title, ": Anzahl Eintragungen"),
+         sp.layout = list(
+           list("sp.text", coord.with.offset, map.with.offset[[zcol]]),
+           list("sp.text", coord.without.offset, map.without.offset[[zcol]])))
+}
+
+
 plot.vb.karten.to.file <- function(basename, karte, eintr, gemeinden = NULL,
                                    title = "Volksbegehren",
                                    anzahl.klassen = c(0, 50, 100, 200, 500, 1000, 2000, 5000, 10000),
