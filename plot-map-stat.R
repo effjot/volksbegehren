@@ -6,9 +6,9 @@ library(RColorBrewer)
 
 ### Karten zeichnen
 
-vb.plot.map <- function(map, data, zcol = "Anzahl", title = "Volksbegehren: Anzahl Eintragungen",
+vb.plot.map <- function(map, data, zcol = "Anzahl", main = "Volksbegehren: Anzahl Eintragungen",
                         classes = round(seq(min(data[[zcol]]), max(data[[zcol]]),
-                          length.out = 10)),
+                          length.out = 10)), custom.layout = NULL,
                         join.col = "Landkreis", offset.label = "Spree-Neiße",
                         palette.name = "GnBu", palette.rev = FALSE) {
 
@@ -31,42 +31,21 @@ vb.plot.map <- function(map, data, zcol = "Anzahl", title = "Volksbegehren: Anza
   coord.with.offset[2] <- coord.with.offset[2] - 0.12
 
   ## Plot erzeugen
+  layout <- if (is.null(custom.layout)) {
+    list(list("sp.text", coord.with.offset, map.with.offset[[zcol]]),
+         list("sp.text", coord.without.offset, map.without.offset[[zcol]]))
+  } else {
+    custom.layout
+  }
   spplot(map, "zclassif", col.regions = palette, col = grey(0.75),
-         main = paste0(title, ": Anzahl Eintragungen"),
-         sp.layout = list(
-           list("sp.text", coord.with.offset, map.with.offset[[zcol]]),
-           list("sp.text", coord.without.offset, map.without.offset[[zcol]])))
+         main = main, sp.layout = layout)
 }
 
 
-plot.vb.karten.to.file <- function(basename, karte, eintr, gemeinden = NULL,
-                                   title = "Volksbegehren",
-                                   anzahl.klassen = c(0, 50, 100, 200, 500, 1000, 2000, 5000, 10000),
-                                   prozent.klassen = c(0, 0.05, 0.1, 0.2, 0.5, 1, 2, 5, 10, 20)) {
-
-  ## VB-Ergebnisse mit Karte verbinden
-
-  karte@data <- data.frame(karte@data,
-                           eintr[match(karte@data[, "Landkreis"],
-                                       eintr[, "Landkreis"]), ])
-
-  ## Klasseneinteilung
-
-  karte$anz.klassif <- cut(karte$Anzahl, anzahl.klassen,
-                           labels = paste("bis", tail(anzahl.klassen, -1)))
-  karte$proz.klassif <- cut(karte$Prozent, prozent.klassen,
-                            labels = paste0("bis ", tail(prozent.klassen, -1), "%"))
-
-  ## Darstellung
-
-  anz.palette <- brewer.pal(nlevels(karte$anz.klassif), "GnBu")
-  proz.palette <- brewer.pal(nlevels(karte$proz.klassif), "GnBu")
-
-  karte.ohne.spn <- karte[karte$Landkreis != "Spree-Neiße", ]
-  karte.nur.spn <- karte[karte$Landkreis == "Spree-Neiße", ]
-  coord.ohne.spn <- coordinates(karte.ohne.spn)
-  coord.nur.spn <- coordinates(karte.nur.spn)
-  coord.nur.spn[2] <- coord.nur.spn[2] - 0.12
+vb.file.standard.maps <- function(basename, karte, eintr, gemeinden = NULL,
+                                  title = "Volksbegehren",
+                                  anzahl.klassen = c(0, 50, 100, 200, 500, 1000, 2000, 5000, 10000),
+                                  prozent.klassen = c(0, 0.05, 0.1, 0.2, 0.5, 1, 2, 5, 10, 20)) {
 
   if (!is.null(gemeinden)) {
     gemnd.ohne.cb <- gemeinden[gemeinden$Gemeinde != "Cottbus", ]
@@ -74,31 +53,25 @@ plot.vb.karten.to.file <- function(basename, karte, eintr, gemeinden = NULL,
   }
 
   png(paste0(basename, "-anz.png"), width=480, height=480)
-  print(spplot(karte, "anz.klassif", col.regions = anz.palette, col = grey(0.75),
-               main = paste0(title, ": Anzahl Eintragungen"),
-               sp.layout = list(
-                 list("sp.text", coord.nur.spn, karte.nur.spn$Anzahl),
-                 list("sp.text", coord.ohne.spn, karte.ohne.spn$Anzahl))))
+  print(vb.plot.map(karte, eintr, "Anzahl", classes = anzahl.klassen,
+                    main = paste0(title, ": Anzahl Eintragungen")))
   dev.off()
 
   png(paste0(basename, "-proz.png"), width=480, height=480)
-  print(spplot(karte, "proz.klassif", col.regions = proz.palette, col = grey(0.75),
-               main = paste0(title, ": Beteiligung in Prozent"),
-               sp.layout = list(
-                 list("sp.text", coord.nur.spn, karte.nur.spn$Prozent),
-                 list("sp.text", coord.ohne.spn, karte.ohne.spn$Prozent))))
+  print(vb.plot.map(karte, eintr, "Prozent", classes = prozent.klassen,
+                    main = paste0(title, ": Beteiligung in Prozent")))
   dev.off()
 
   if (!is.null(gemeinden)) {
     png(paste0(basename, "-top5.png"), width=480, height=480)
-    print(spplot(karte, "anz.klassif", col.regions = anz.palette, col = grey(0.75),
-                 main = paste0(title, ": Top-5-Gemeinden"),
-                 sp.layout = list(
-                   list("sp.points", gemeinden, pch = 16, col = "red", cex = 1.5),
-                   list("sp.text", coordinates(gemnd.ohne.cb),
-                        gemnd.ohne.cb$Anzahl, adj = c(1.2, 1.2), cex = 1.5),
-                   list("sp.text", coordinates(gemnd.nur.cb), gemnd.nur.cb$Anzahl,
-                        pos = 4, cex = 1.5))))
+    print(vb.plot.map(karte, eintr, "Anzahl", classes = anzahl.klassen,
+                      main = paste0(title, ": Top-5-Gemeinden"),
+                      custom.layout = list(
+                        list("sp.points", gemeinden, pch = 16, col = "red", cex = 1.5),
+                        list("sp.text", coordinates(gemnd.ohne.cb),
+                             gemnd.ohne.cb$Anzahl, adj = c(1.2, 1.2), cex = 1.5),
+                        list("sp.text", coordinates(gemnd.nur.cb), gemnd.nur.cb$Anzahl,
+                             pos = 4, cex = 1.5))))
     dev.off()
   }
 }

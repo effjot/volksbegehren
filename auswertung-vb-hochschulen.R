@@ -28,8 +28,8 @@ brandenburg$Landkreis <- gsub("am Oder", "(Oder)", brandenburg$Landkreis)
 
 ### Karten erzeugen
 
-plot.vb.karten.to.file("zwischenstand", brandenburg, eintr.zw, gemeinden.zw,
-                       "Zwischenstand 10.07.13",
+vb.file.standard.maps("zwischenstand", brandenburg, eintr.zw, gemeinden.zw,
+                      "Zwischenstand 10.07.13",
                        prozent.klassen = c(0, 0.05, 0.1, 0.2, 0.5, 1, 2, 5, 10))
-plot.vb.karten.to.file("vorl-endergebnis", brandenburg, eintr.ve, NULL,
-                       "Vorläufiges Endergebnis 10.09.13")
+vb.file.standard.maps("vorl-endergebnis", brandenburg, eintr.ve, NULL,
+                      "Vorläufiges Endergebnis 10.09.13")
