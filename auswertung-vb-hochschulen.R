@@ -46,7 +46,7 @@ vb.file.standard.maps("zwischenstand", brandenburg, eintr.zw, gemeinden.zw,
                       "Zwischenstand 10.07.13",
                        prozent.klassen = c(0, 0.05, 0.1, 0.2, 0.5, 1, 2, 5, 10))
 vb.file.standard.maps("vorl-endergebnis", brandenburg, eintr.ve, NULL,
-                      "Vorläufiges Endergebnis 10.09.13")
+                      "Vorläufiges Endergebnis 09.10.13")
 
 png("vorl-endergebnis-brief.png", width=480, height=480)
 vb.plot.map(brandenburg, eintr.ve, zcol="Briefprozent",
