@@ -39,6 +39,10 @@ Eine Liste der Gemeinden mit den meisten Eintragungen gibt es in dieser PI nicht
 Kartendarstellung
 -----------------
 
+Achtung, zunächst muß man die Verwaltungsgrenzen für die Karten herunterladen!
+
+http://gadm.org/ → Download → Germany → R Data → Level 3
+
 Im R-Skript `auswertung-vb-hochschulen.R` werden die Daten eingelesen, aufbereitet und in Karten dargestellt (gespeichert als PNG):
 
 * Zwischenergebnis, Endergebnis: Anzahl Eintragungen Landkreise, mit Beschriftung
@@ -47,5 +51,3 @@ Im R-Skript `auswertung-vb-hochschulen.R` werden die Daten eingelesen, aufbereit
 * nur Endergebnis: Anteil Briefwahlstimmen
 * Zuwachs Stimmen von Zwischen- zu Endergebnis
 * prozentualer Zuwachs von Zwischen- zu Endergebnis
-
-Die Verwaltungsgrenzen muß man sich von http://gadm.org herunterladen: Download → Germany → R Data → Level 3.
