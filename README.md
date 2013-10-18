@@ -36,6 +36,19 @@ Ergebnisse der Landkreise und kreisfreien Städte sind in der CSV-Datei `vorlf-e
 Eine Liste der Gemeinden mit den meisten Eintragungen gibt es in dieser PI nicht.
 
 
+Vergleichsdaten: Nachtflugverbot
+--------------------------------
+
+Zum Vergleich das Endergebnis des Volksbegehrens zum Nachflugverbot (Pressemitteilung 1/2013, http://www.wahlen.brandenburg.de/cms/detail.php/bb1.c.318253.de) in der CSV-Datei `nachtflugverbot.csv`, mit den Spalten:
+
+1. `Landkreis` (meint sowohl Landkreise als auch kreisfreie Städte)
+2. `berechtigt`: Anzahl Eintragungsberechtigte
+3. `Anzahl` der Eintragungen
+4. `Liste`: Anzahl Eintragungen in Eintragungslisten
+5. `Brief`: Anzahl Eintragungen per Eintragungsschein („Briefwahlstimmen“)
+6. `Prozent`: Abstimmungsbeteiligung in %
+
+
 Kartendarstellung
 -----------------
 
