@@ -43,9 +43,10 @@ Zum Vergleich das Endergebnis des Volksbegehrens zum Nachflugverbot (Pressemitte
 
 1. `Landkreis` (meint sowohl Landkreise als auch kreisfreie Städte)
 2. `berechtigt`: Anzahl Eintragungsberechtigte
-3. `Anzahl` der Eintragungen
-4. `Liste`: Anzahl Eintragungen in Eintragungslisten
-5. `Brief`: Anzahl Eintragungen per Eintragungsschein („Briefwahlstimmen“)
+3. `gesamt`: Anzahl Eintragungen insgesamt
+3. `Anzahl` der gültigen Eintragungen
+4. `Liste`: Anzahl gültige Eintragungen in Eintragungslisten
+5. `Brief`: Anzahl gültige Eintragungen per Eintragungsschein („Briefwahlstimmen“)
 6. `Prozent`: Abstimmungsbeteiligung in %
 
 
