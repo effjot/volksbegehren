@@ -13,10 +13,12 @@ coordinates(gemeinden.zw) <- ~ lon + lat   # Koordinatenspalten zuweisen
 eintr.ve <- read.csv("vorlf-endergebnis.csv", as.is = TRUE, fileEncoding = "latin1")
 
 ## beides in ein dataframe
-eintr.all <- merge(eintr.zw, eintr.ve, by = "Landkreis", suffixes = c(".zw", ".ve"))
+eintr.all <- merge(eintr.zw, eintr.ve, by = "Landkreis", suffixes = c(".zw", ".ve"),
+                   sort = TRUE)
 
 ## Nachtflugverbot
 nachtflug <- read.csv("nachtflugverbot.csv", as.is = TRUE, fileEncoding = "latin1")
+nachtflug <- nachtflug[order(nachtflug$Landkreis), ]
 
 
 ### Landkreise in Deutschland von http://gadm.org/
@@ -43,8 +45,7 @@ eintr.all$zuwachsprozent.zw <- round(eintr.all$zuwachs/eintr.all$Anzahl.zw * 100
 eintr.all$zuwachsprozent.ges <- round(eintr.all$zuwachs/eintr.all$Anzahl.ve * 100)
 
 ## Unterschied Nachtflugverbot, Hochschulen erhalten
-
-eintr.all$d.nachtflug.prozpkt <- eintr.ve$Prozent - nachtflug$Prozent
+eintr.all$d.nachtflug.prozpkt <- eintr.all$Prozent.ve - nachtflug$Prozent
 
 
 ### Karten zeichnen
