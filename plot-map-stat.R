@@ -10,7 +10,7 @@ vb.plot.map <- function(map, data, zcol = "Anzahl", main = "Volksbegehren: Anzah
                         classes = round(seq(min(data[[zcol]]), max(data[[zcol]]),
                           length.out = 10)), custom.layout = NULL,
                         join.col = "Landkreis", offset.label = "Spree-Neiße",
-                        palette.name = "GnBu", palette.rev = FALSE) {
+                        palette.name = "GnBu", palette.rev = FALSE, ...) {
 
   ##  VB-Ergebnisse mit Karte verbinden
   map@data <- data.frame(map@data,
@@ -38,7 +38,7 @@ vb.plot.map <- function(map, data, zcol = "Anzahl", main = "Volksbegehren: Anzah
     custom.layout
   }
   spplot(map, "zclassif", col.regions = palette, col = grey(0.75),
-         main = main, sp.layout = layout)
+         main = main, sp.layout = layout, ...)
 }
 
 
