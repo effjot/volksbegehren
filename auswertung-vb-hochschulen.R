@@ -91,7 +91,7 @@ dev.off()
 
 png("vergleich-nachtflug-prozpkt.png")
 vb.plot.map(brandenburg, eintr.all, "d.nachtflug.prozpkt",
-            classes = c(0, 0.1, 0.2, 0.5, 1, 2, 5, 10, 20),
+            classes = c(-20, -10, -5, -2, -1, 1, 2, 5, 10, 20),
             main = "Prozenpunkte Unterschied Hochschulen – Nachtflug",
             palette.name = "RdYlGn")
 dev.off()
