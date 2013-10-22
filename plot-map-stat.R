@@ -23,6 +23,10 @@ vb.plot.map <- function(map, data, zcol = "Anzahl", main = "Volksbegehren: Anzah
   palette <- brewer.pal(nlevels(map$zclassif), palette.name)
   if (palette.rev) palette <- rev(palette)
 
+  colorkey <- list(labels = list(at = seq(from = 0.5, along.with = classes),
+                                 labels = classes),
+                   height = min(1, 0.05 * length(classes)))
+
   ## Labels versetzen wg. Überlappung
   map.without.offset <- map[map[[join.col]] != offset.label, ]
   map.with.offset <- map[map[[join.col]] == offset.label, ]
@@ -38,7 +42,7 @@ vb.plot.map <- function(map, data, zcol = "Anzahl", main = "Volksbegehren: Anzah
     custom.layout
   }
   spplot(map, "zclassif", col.regions = palette, col = grey(0.75),
-         main = main, sp.layout = layout, ...)
+         main = main, colorkey = colorkey, sp.layout = layout, ...)
 }
 
 
