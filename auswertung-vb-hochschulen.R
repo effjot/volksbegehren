@@ -60,7 +60,8 @@ png("vorl-endergebnis-brief.png", width=480, height=480)
 vb.plot.map(brandenburg, eintr.ve, zcol="Briefprozent",
             classes = c(0, seq(15, 85, by=10), 100),
             main = "prozentualer Anteil Briefwahl",
-            palette.name = "RdYlGn", palette.rev = TRUE)
+            palette.name = "PuOr",
+            palette.rev = FALSE)
 dev.off()
 
 png("vorl-endergebnis-zuwachs.png", width=480, height=480)
@@ -92,6 +93,6 @@ dev.off()
 png("vergleich-nachtflug-prozpkt.png")
 vb.plot.map(brandenburg, eintr.all, "d.nachtflug.prozpkt",
             classes = c(-20, -10, -5, -2, -1, 1, 2, 5, 10, 20),
-            main = "Prozenpunkte Unterschied Hochschulen – Nachtflug",
+            main = "Prozentpunkte Unterschied Hochschulen – Nachtflug",
             palette.name = "RdYlGn")
 dev.off()
