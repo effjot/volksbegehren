@@ -36,6 +36,21 @@ Ergebnisse der Landkreise und kreisfreien Städte sind in der CSV-Datei `vorlf-e
 Eine Liste der Gemeinden mit den meisten Eintragungen gibt es in dieser PI nicht.
 
 
+Daten vorläufiges Ergebnis 24.10.13
+-----------------------------------
+
+Presseinformation 18/2013 des Landeswahlleiters auf http://www.wahlen.brandenburg.de/cms/detail.php/bb1.c.344683.de
+
+Ergebnisse der Landkreise und kreisfreien Städte sind in der CSV-Datei `endergebnis.csv`.  Gleiche Spalten wie beim vorläufigen Endergebnis, zusätzlich aber noch
+
+* `berechtigt`: Anzahl Eintragungsberechtigte
+* `gesamt`: Anzahl Eintragungen insgesamt
+
+(`Anzahl` sind die gültigen Eintragungen.)
+
+Eine Liste der Gemeinden mit den meisten Eintragungen gibt es in dieser PI nicht.
+
+
 Vergleichsdaten: Nachtflugverbot
 --------------------------------
 
